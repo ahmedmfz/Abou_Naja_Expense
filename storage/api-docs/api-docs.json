@@ -1,0 +1,124 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Abou Naja Intellectual Property Api Docs",
+        "version": "v1"
+    },
+    "paths": {
+        "/api/expenses": {
+            "get": {
+                "tags": [
+                    "expenses"
+                ],
+                "summary": "expenses api",
+                "operationId": "7361407ac9c2daf85d6eabed23a170d5",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "page number",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Category",
+                        "in": "header",
+                        "description": " 1,2,3",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "Date",
+                        "in": "header",
+                        "description": "20/05/2025-21-05-2025",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "expenses"
+                ],
+                "summary": "Store Expenses",
+                "operationId": "7d3fa2282f8c46c01650010185c3fe7c",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "amount",
+                                    "category",
+                                    "expense_date"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Test Expenese"
+                                    },
+                                    "amount": {
+                                        "type": "string",
+                                        "format": "number",
+                                        "example": "230"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "format": "number",
+                                        "example": "5"
+                                    },
+                                    "expense_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1990-01-01"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Test Expenese notes"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully"
+                    },
+                    "422": {
+                        "description": "Invalid Validation"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "api_key": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "expenses",
+            "description": "expenses"
+        }
+    ]
+}
