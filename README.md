@@ -130,7 +130,7 @@ routes/
 
 On successful create:
 - Event `ExpenseCreated` dispatched  
-- Listener 1: stores DB notification  
+- Listener 1: stores DB notification (queued)
 - Listener 2: sends email (queued)
 
 ## Assumptions
