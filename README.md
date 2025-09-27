@@ -1,61 +1,150 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Expenses API (Laravel 12)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modular Laravel 12 API for managing expenses with:
+- **nwidart/laravel-modules** (Expense module)
+- **Events & Listeners** (store DB notification + send email on create)
+- **Centralized exceptions** via `bootstrap/app.php -> withExceptions(...)`
+- **OpenAPI/Swagger** docs
+- **Queued** notifications & mail
 
-## About Laravel
+**Repo:** https://github.com/ahmedmfz/Abou_Naja_Expense.git
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Requirements
+- PHP 8.2+
+- MySQL 8+ or PostgreSQL 14+
+- Composer 2+
+- Redis (recommended for queues)
+- Mail driver configured (SMTP, Mailhog, or similar)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Quick Start
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```bash
+# 1) Clone
+git clone https://github.com/ahmedmfz/Abou_Naja_Expense.git
+cd Abou_Naja_Expense
 
-## Learning Laravel
+# 2) Install deps
+composer install
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+# 3) Env
+cp .env.example .env
+php artisan key:generate
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+# 4) DB & migrations
+# set DB_* in .env first
+php artisan migrate --seed
+php artisan module:seed Expense   # seed the Expense module too
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# 5) Queue (required for email/notifications)
+php artisan queue:work
 
-## Laravel Sponsors
+# 6) Serve API
+php artisan serve
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Swagger / OpenAPI
+- Visit: `/api/documentation` (Here's you can show and test apis)
+- Rebuild docs:
+```bash
+php artisan l5-swagger:generate
+```
 
-### Premium Partners
+## Environment
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Example `.env` essentials:
+```dotenv
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost:8000
 
-## Contributing
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=expenses
+DB_USERNAME=root
+DB_PASSWORD=secret
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+QUEUE_CONNECTION=database
+CACHE_DRIVER=file
+SESSION_DRIVER=file
 
-## Code of Conduct
+MAIL_MAILER=smtp
+MAIL_HOST=127.0.0.1
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="no-reply@example.com"
+MAIL_FROM_NAME="Expenses API"
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Project Structure (high level)
 
-## Security Vulnerabilities
+```
+bootstrap/app.php               # Laravel 12 app config (exceptions wired here)
+Modules/
+  Expense/
+    App/
+      Events/ExpenseCreated.php
+      Listeners/SendExpenseEmail.php
+      Listeners/StoreExpenseNotification.php
+      Providers/ExpenseServiceProvider.php
+      Http/Controllers/ExpenseController.php
+      Http/Requests/StoreExpenseRequest.php
+      Http/Requests/UpdateExpenseRequest.php
+      Repositories/ExpenseRepository.php
+      Services/ExpenseService.php
+      Notifications/ExpenseCreatedNotification.php
+      Mail/ExpenseCreatedMail.php
+    Database/
+      Migrations/*_create_expenses_table.php
+      Seeders/ExpenseDatabaseSeeder.php
+    Resources/
+      views/emails/expenses/created.blade.php
+routes/
+  api.php
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Architecture & Decisions
 
-## License
+- **Modules (nwidart)** to isolate the Expense domain (models, requests, service/repo, listeners).
+- **Service + Repository** to keep controllers thin and business logic testable.
+- **Events/Listeners**
+  - `ExpenseCreated` fired after create.
+  - `StoreExpenseNotification` (DB notifications table).
+  - `SendExpenseEmail` (queued mailable).
+- **Exception handling** in `bootstrap/app.php` using `->withExceptions()`:
+  - JSON for API via `shouldRenderJsonWhen()`
+  - 404 (route/model), 405, 401, 403, 422 unified responses.
+- **OpenAPI** annotations on CRUD endpoints for auto docs.
+- **Pagination** query param uses `per_page` (snake_case) to align with Laravel conventions.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## API Overview
+
+- `POST /api/expenses` — create  
+- `GET /api/expenses` — list (query: `page`, `per_page`, `category`, `from`, `to`)  
+  - `category`: filter by category id/enum  
+  - `from` / `to`: ISO date (YYYY-MM-DD) range filter on `expense_date`  
+- `GET /api/expenses/{id}` — show  
+- `PUT/PATCH /api/expenses/{id}` — update  
+- `DELETE /api/expenses/{id}` — delete  
+
+On successful create:
+- Event `ExpenseCreated` dispatched  
+- Listener 1: stores DB notification  
+- Listener 2: sends email (queued)
+
+## Assumptions
+- You have a mail catcher or SMTP for local (e.g., Mailhog on port 1025).
+- Notifications use the **database** channel only (no broadcast).
+- IDs are **UUIDs** for expenses.
+- `category` is an **enum backed by int** in the DB and transformed in resources.
+- **All API FormRequests extend an abstract `BaseApiRequest`** that overrides Laravel’s default validation response shape for consistency across endpoints.
+- **Notifications and emails are processed via the queue** (both listeners implement `ShouldQueue`, and a queue worker is running).
+
+## Time Spent
+- Setup & scaffolding: **1**
+- Module wiring & CRUD: **2–4**
+- Events/Listeners/Notifications/Mail: **2**
+- Exception strategy & tests: **2**
+- Swagger docs: **2**
