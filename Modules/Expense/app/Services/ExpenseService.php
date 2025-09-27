@@ -3,7 +3,9 @@
 namespace Modules\Expense\Services;
 
 
+use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Modules\Expense\app\Events\ExpenseCreated;
 use Modules\Expense\Interfaces\ExpenseRepositoryInterface;
 use Modules\Expense\Interfaces\ExpenseServiceInterface;
 use Modules\Expense\App\Models\Expense;
@@ -20,7 +22,10 @@ class ExpenseService implements ExpenseServiceInterface
 
     public function create(array $data): Expense
     {
-        return $this->repo->store($data);
+        $expense = $this->repo->store($data);
+        $user = User::first();
+        event(new ExpenseCreated($expense, $user));
+        return $expense;
     }
 
     public function update(array $data ,Expense $expense): Expense

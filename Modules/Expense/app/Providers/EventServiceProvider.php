@@ -3,6 +3,9 @@
 namespace Modules\Expense\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\Expense\app\Events\ExpenseCreated;
+use Modules\Expense\Listeners\SendExpenseEmail;
+use Modules\Expense\Listeners\StoreExpenseNotification;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -11,7 +14,12 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array<string, array<int, string>>
      */
-    protected $listen = [];
+    protected $listen = [
+        ExpenseCreated::class => [
+            StoreExpenseNotification::class,
+            SendExpenseEmail::class,
+        ],
+    ];
 
     /**
      * Indicates if events should be discovered.
