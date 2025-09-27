@@ -135,6 +135,7 @@ Modules/Expense/
 - **OpenAPI** annotations on CRUD endpoints for auto docs.
 - **Pagination** to limit results and avoid timeouts or oversized responses, improving overall performance.
 - **An `ApiResponseHelper` is used to unify all backend API responses** (success and error) into a consistent JSON shape across the application.
+- **All API FormRequests extend an abstract `BaseApiRequest`** that overrides Laravel’s default validation response shape for consistency across endpoints.
 
 ## API Overview
 
@@ -155,7 +156,6 @@ On successful create:
 - Notifications use the **database** channel only (no broadcast).
 - IDs are **UUIDs** for expenses.
 - `category` is an **enum backed by int** in the DB and transformed in resources.
-- **All API FormRequests extend an abstract `BaseApiRequest`** that overrides Laravel’s default validation response shape for consistency across endpoints.
 - **Notifications and emails are processed via the queue** (both listeners implement `ShouldQueue`, and a queue worker is running).
 
 ## Time Spent : 10 Hours
