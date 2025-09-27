@@ -7,9 +7,8 @@ A modular Laravel 12 API for managing expenses with:
 - **OpenAPI/Swagger** docs
 - **Queued** notifications & mail
 
-**Repo:** https://github.com/ahmedmfz/Abou_Naja_Expense.git
-
 ## Requirements
+
 - PHP 8.2+
 - MySQL 8+ or PostgreSQL 14+
 - Composer 2+
@@ -78,31 +77,48 @@ MAIL_FROM_ADDRESS="no-reply@example.com"
 MAIL_FROM_NAME="Expenses API"
 ```
 
+
 ## Project Structure (high level)
 
 ```
 bootstrap/app.php               # Laravel 12 app config (exceptions wired here)
-Modules/
-  Expense/
-    App/
-      Events/ExpenseCreated.php
-      Listeners/SendExpenseEmail.php
-      Listeners/StoreExpenseNotification.php
-      Providers/ExpenseServiceProvider.php
-      Http/Controllers/ExpenseController.php
-      Http/Requests/StoreExpenseRequest.php
-      Http/Requests/UpdateExpenseRequest.php
-      Repositories/ExpenseRepository.php
-      Services/ExpenseService.php
-      Notifications/ExpenseCreatedNotification.php
-      Mail/ExpenseCreatedMail.php
-    Database/
-      Migrations/*_create_expenses_table.php
-      Seeders/ExpenseDatabaseSeeder.php
-    Resources/
-      views/emails/expenses/created.blade.php
-routes/
-  api.php
+Modules/Expense/
+├─ App/
+│  ├─ Emails/
+│  │  └─ ExpenseCreatedMail.php
+│  ├─ Enums/
+│  │  └─ CategoryEnum.php
+│  ├─ Events/
+│  │  └─ ExpenseCreated.php
+│  ├─ Http/
+│  │  ├─ Controllers/
+│  │  │  ├─ .gitkeep
+│  │  │  └─ ExpenseController.php
+│  │  └─ Requests/
+│  │     ├─ BaseApiRequest.php
+│  │     └─ Expense/
+│  │        ├─ StoreExpenseRequest.php
+│  │        ├─ UpdateExpenseRequest.php
+│  │        └─ ViewExpenseRequest.php
+│  ├─ Interfaces/
+│  │  ├─ ExpenseRepositoryInterface.php
+│  │  └─ ExpenseServiceInterface.php
+│  ├─ Listeners/
+│  │  ├─ SendExpenseEmail.php
+│  │  └─ StoreExpenseNotification.php
+│  ├─ Models/
+│  │  └─ Expense.php
+│  ├─ Notifications/
+│  │  └─ ExpenseCreatedNotification.php
+│  ├─ Providers/
+│  ├─ Repositories/
+│  │  └─ ExpenseRepository.php
+│  ├─ Services/
+│  │  └─ ExpenseService.php
+│  └─ Transformers/
+│     └─ Expense/
+│        ├─ ExpenseCollection.php
+│        └─ ExpenseResource.php
 ```
 
 ## Architecture & Decisions
@@ -118,6 +134,7 @@ routes/
   - 404 (route/model), 405, 401, 403, 422 unified responses.
 - **OpenAPI** annotations on CRUD endpoints for auto docs.
 - **Pagination** to limit results and avoid timeouts or oversized responses, improving overall performance.
+- **An `ApiResponseHelper` is used to unify all backend API responses** (success and error) into a consistent JSON shape across the application.
 
 ## API Overview
 
