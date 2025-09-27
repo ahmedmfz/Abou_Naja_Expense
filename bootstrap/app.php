@@ -58,4 +58,5 @@ return Application::configure(basePath: dirname(__DIR__))
 //            $message = config('app.debug') ? $e->getMessage() : 'Server error';
             return ApiResponseHelper::returnErrorMessage('Server Error', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         });
+
     })->create();
