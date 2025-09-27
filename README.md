@@ -121,6 +121,12 @@ Modules/Expense/
 │        └─ ExpenseResource.php
 ```
 
+### Tests
+- Run the Expense repository tests
+```bash
+php artisan test --filter "ExpenseRepositoryTest"
+```
+
 ## Architecture & Decisions
 
 - **Modules (nwidart)** to isolate the Expense domain (models, requests, service/repo, listeners).
