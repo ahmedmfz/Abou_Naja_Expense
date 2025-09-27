@@ -43,7 +43,7 @@ php artisan serve
 ```
 
 ### Swagger / OpenAPI
-- Visit: `/api/documentation` (Here's you can show and test apis)
+- Visit: `/api/documentation` (Here you can Show and Test Apis)
 - Rebuild docs:
 ```bash
 php artisan l5-swagger:generate
@@ -142,9 +142,9 @@ On successful create:
 - **All API FormRequests extend an abstract `BaseApiRequest`** that overrides Laravel’s default validation response shape for consistency across endpoints.
 - **Notifications and emails are processed via the queue** (both listeners implement `ShouldQueue`, and a queue worker is running).
 
-## Time Spent
-- Setup & scaffolding: **1**
-- Module wiring & CRUD: **2–4**
-- Events/Listeners/Notifications/Mail: **2**
-- Exception strategy & tests: **2**
-- Swagger docs: **2**
+## Time Spent : 10 Hours
+- Setup & scaffolding: **10 mins**
+- Module wiring & CRUD: **2 – 4 hours**
+- Events/Listeners/Notifications/Mail: **2 hours**
+- Exception strategy & tests: **2 hours**
+- Swagger docs: **2 hours**
