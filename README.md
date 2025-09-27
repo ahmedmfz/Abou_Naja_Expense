@@ -14,7 +14,7 @@ A modular Laravel 12 API for managing expenses with:
 - MySQL 8+ or PostgreSQL 14+
 - Composer 2+
 - Redis (recommended for queues)
-- Mail driver configured (SMTP, Mailhog, or similar)
+- Mail driver configured (SMTP, Mailtrap(local Env), or similar)
 
 ## Quick Start
 
@@ -117,16 +117,15 @@ routes/
   - JSON for API via `shouldRenderJsonWhen()`
   - 404 (route/model), 405, 401, 403, 422 unified responses.
 - **OpenAPI** annotations on CRUD endpoints for auto docs.
-- **Pagination** query param uses `per_page` (snake_case) to align with Laravel conventions.
+- **Pagination** to limit results and avoid timeouts or oversized responses, improving overall performance.
 
 ## API Overview
 
 - `POST /api/expenses` — create  
-- `GET /api/expenses` — list (query: `page`, `per_page`, `category`, `from`, `to`)  
+- `GET /api/expenses` — view all (query: `page`, `per_page`, `category`, `from`, `to`)  
   - `category`: filter by category id/enum  
-  - `from` / `to`: ISO date (YYYY-MM-DD) range filter on `expense_date`  
-- `GET /api/expenses/{id}` — show  
-- `PUT/PATCH /api/expenses/{id}` — update  
+  - `from` / `to`: ISO date (YYYY-MM-DD) range filter on `expense_date`
+- `PUT /api/expenses/{id}` — update  
 - `DELETE /api/expenses/{id}` — delete  
 
 On successful create:
@@ -135,7 +134,7 @@ On successful create:
 - Listener 2: sends email (queued)
 
 ## Assumptions
-- You have a mail catcher or SMTP for local (e.g., Mailhog on port 1025).
+- You have a mail catcher or SMTP for local (e.g., Mailtrap on port 587).
 - Notifications use the **database** channel only (no broadcast).
 - IDs are **UUIDs** for expenses.
 - `category` is an **enum backed by int** in the DB and transformed in resources.
