@@ -23,27 +23,50 @@
                         }
                     },
                     {
-                        "name": "Category",
-                        "in": "header",
-                        "description": " 1,2,3",
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "count of rows in a single page",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "1,2,3",
                         "required": false,
                         "schema": {
                             "type": "number"
                         }
                     },
                     {
-                        "name": "Date",
-                        "in": "header",
-                        "description": "20/05/2025-21-05-2025",
+                        "name": "from",
+                        "in": "query",
+                        "description": "2025-05-25",
                         "required": false,
                         "schema": {
-                            "type": "number"
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "2025-05-30",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "Success"
+                    },
+                    "422": {
+                        "description": "Invalid Request Validation"
                     }
                 }
             },
@@ -82,7 +105,7 @@
                                     "expense_date": {
                                         "type": "string",
                                         "format": "date",
-                                        "example": "1990-01-01"
+                                        "example": "2025-01-01"
                                     },
                                     "notes": {
                                         "type": "string",
@@ -97,10 +120,109 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "User registered successfully"
+                        "description": "Expenese created successfully"
                     },
                     "422": {
-                        "description": "Invalid Validation"
+                        "description": "Invalid Request Validation"
+                    }
+                }
+            }
+        },
+        "/api/expenses/{id}": {
+            "put": {
+                "tags": [
+                    "expenses"
+                ],
+                "summary": "Update an expense (full update)",
+                "operationId": "8e368d74f8a7f205e5da8cd2cef73f89",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Expense UUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "amount",
+                                    "category",
+                                    "expense_date"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Taxi to client site"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 230.5
+                                    },
+                                    "category": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "expense_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-01-01"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Paid cash"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Expense updated successfully"
+                    },
+                    "404": {
+                        "description": "Expense not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "expenses"
+                ],
+                "summary": "Delete an expense",
+                "operationId": "e1d45c829f99418d031c49691d8f3605",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Expense UUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted"
+                    },
+                    "404": {
+                        "description": "Expense not found"
                     }
                 }
             }

@@ -20,23 +20,16 @@ class ExpenseService implements ExpenseServiceInterface
 
     public function create(array $data): Expense
     {
-        if (isset($data['category']) && $data['category'] instanceof Category) {
-            $data['category'] = $data['category']->value;
-        }
-
         return $this->repo->store($data);
     }
 
-    public function update(Expense $expense, array $data): Expense
+    public function update(array $data ,Expense $expense): Expense
     {
-        if (isset($data['category']) && $data['category'] instanceof Category) {
-            $data['category'] = $data['category']->value;
-        }
-        return $this->repo->update($expense->id, $data);
+        return $this->repo->update($data ,$expense);
     }
 
     public function delete(Expense $expense): void
     {
-        $this->repo->delete($expense->id);
+        $this->repo->delete($expense);
     }
 }

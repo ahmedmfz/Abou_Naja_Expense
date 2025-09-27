@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Expense\Enums\CategoryEnum;
 
-// use Modules\Expense\Database\Factories\ExpenseFactory;
 
 class Expense extends Model
 {

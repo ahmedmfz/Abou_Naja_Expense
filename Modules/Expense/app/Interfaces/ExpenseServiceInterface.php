@@ -7,10 +7,8 @@ use Modules\Expense\App\Models\Expense;
 
 
 interface ExpenseServiceInterface {
-    public function viewAll($data , int $perPage = 15): LengthAwarePaginator;
-
+    public function viewAll(array $data , int $perPage): LengthAwarePaginator;
     public function create(array $data): Expense;
-    public function update(Expense $expense, array $data): Expense;
+    public function update(array $data , Expense $expense): Expense;
     public function delete(Expense $expense): void;
-
 }

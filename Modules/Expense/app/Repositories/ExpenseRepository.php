@@ -10,17 +10,18 @@ class ExpenseRepository implements ExpenseRepositoryInterface
 {
     protected $model = Expense::class;
 
-    public function paginate($data = [] , ?int $perPage = 20): LengthAwarePaginator
+    public function paginate(array $data =[], ?int $perPage = 15): LengthAwarePaginator
     {
         $query =  $this->model::query();
 
-        $query->when($data['from'], function ($query) use ($data) {
-            return $query->whereDate('expense_date', '>=', $data['from']);
-        })->when($data['to'], function ($query) use ($data) {
-            return $query->whereDate('expense_date', '<=', $data['to']);
-        })->when($data['category'], function ($query) use ($data) {
-            $query->where('category', $data['category']);
-        })->latest('expense_date');
+        $query->when(isset($data['from']) && !is_null($data['from']), function ($query) use ($data) {
+                return $query->whereDate('expense_date', '>=', $data['from']);
+            })->when(isset($data['to']) && !is_null($data['to']), function ($query) use ($data) {
+                return $query->whereDate('expense_date', '<=', $data['to']);
+            })->when(isset($data['category']) && !is_null($data['category']), function ($query) use ($data) {
+                $query->where('category', $data['category']);
+            })
+            ->latest('expense_date');
 
         return $query->paginate($perPage);
     }
@@ -30,16 +31,14 @@ class ExpenseRepository implements ExpenseRepositoryInterface
         return $this->model::create($data);
     }
 
-    public function update(string $id, array $data): Expense
+    public function update(array $data , Expense $expense): Expense
     {
-        $expense = $this->model::query()->findOrFail($id);
         $expense->update($data);
         return $expense;
     }
 
-    public function delete(string $id): bool
+    public function delete(Expense $expense): bool
     {
-        $expense = $this->model::findOrFail($id);
         return (bool) $expense->delete();
     }
 }

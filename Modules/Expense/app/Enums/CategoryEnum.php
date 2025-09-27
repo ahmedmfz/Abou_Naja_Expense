@@ -14,7 +14,6 @@ enum CategoryEnum  :  int{
     case TRANSPORT     = 9;
     case MISC          = 10;
 
-
     public static function names(): array
     {
         return array_column(self::cases(), 'name');
@@ -29,10 +28,5 @@ enum CategoryEnum  :  int{
     {
         return array_combine(self::values(), self::names());
     }
-    public function is(self $type): bool
-    {
-        return $this === $type;
-    }
-
 }
 
