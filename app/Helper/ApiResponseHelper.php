@@ -3,12 +3,13 @@
 namespace App\Helper;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApiResponseHelper
 {
     public static function returnJSON($data = [], $status = true, $code = JsonResponse::HTTP_OK , $message = 'Data Has Fetched successfully')
     {
-        if ($data instanceof \Illuminate\Http\Resources\Json\JsonResource) {
+        if ($data instanceof JsonResource) {
             return $data->additional([
                 'status'  => $status,
                 'message' => $message,

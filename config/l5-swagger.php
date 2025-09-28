@@ -45,7 +45,7 @@ return [
                  */
                 'annotations' => [
                     base_path('app'),
-                    base_path('Modules'),      // if you use nwidart/modules
+                    base_path('Modules'),
                 ],
             ],
         ],
